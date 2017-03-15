@@ -48,6 +48,9 @@ private:
 	bool right_click = false;
 	bool left_click = false;
 	/**/
+	bool optimizedpathfinding = false;
+	int lastoptimizedtime = 0;
+	int lastnormaltime = 0;
 	int x_select = 0;
 	int y_select = 0;
 	int w = 0;

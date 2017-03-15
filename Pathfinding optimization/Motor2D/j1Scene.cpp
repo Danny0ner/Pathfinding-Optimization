@@ -31,7 +31,7 @@ bool j1Scene::Awake()
 // Called before the first frame
 bool j1Scene::Start()
 {
-	if(App->map->Load("iso_walk.tmx") == true)
+	if(App->map->Load("iso_walk2.tmx") == true)
 	{
 		int w, h;
 		uchar* data = NULL;
@@ -85,11 +85,29 @@ bool j1Scene::PreUpdate()
 	iPoint p = App->render->ScreenToWorld(x, y);
 	p = App->map->WorldToMap(p.x, p.y);
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN && origin_selected == false) {
+		if (optimizedpathfinding == false) 
+			optimizedpathfinding = true;
+		else optimizedpathfinding = false;
+	}
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && optimizedpathfinding == false)
 	{
 		if (origin_selected == true)
 		{
-			App->pathfinding->CreatePath(origin, p);
+			lastnormaltime = App->pathfinding->CreatePath(origin, p);
+			origin_selected = false;
+		}
+		else
+		{
+			origin = p;
+			origin_selected = true;
+		}
+	}
+	else if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN && optimizedpathfinding == true)
+	{
+		if (origin_selected == true)
+		{
+			lastoptimizedtime = App->pathfinding->SimpleAstar(origin, p);
 			origin_selected = false;
 		}
 		else
@@ -157,12 +175,11 @@ bool j1Scene::Update(float dt)
 	App->input->GetMousePosition(x, y);
 	iPoint map_coordinates = App->map->WorldToMap(x - App->render->camera.x, y - App->render->camera.y);
 	
-	std::string title;
-	title = ("Map:%dx%d Tiles:%dx%d Tilesets:%d Tile:%d,%d",
-		App->map->data.width, App->map->data.height,
-		App->map->data.tile_width, App->map->data.tile_height,
-		App->map->data.tilesets.size(),
-		map_coordinates.x, map_coordinates.y);
+
+
+	static char title[100];
+	sprintf_s(title,100, "PathfindingOptimized : %d OptPath time: %d ms NormalPath time: %d ms",1, lastoptimizedtime, lastnormaltime);
+	App->win->SetTitle(title);
 
 	//App->win->SetTitle(title.c_str());
 
