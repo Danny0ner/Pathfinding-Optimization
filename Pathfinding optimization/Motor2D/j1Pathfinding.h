@@ -140,7 +140,7 @@ public:
 	//PathNode* GetNodeLowestScore() const;
 
 	// PathList data --------
-	std::priority_queue<PathNode*, std::vector<PathNode*>, compare > list;
+	
 };
 
 

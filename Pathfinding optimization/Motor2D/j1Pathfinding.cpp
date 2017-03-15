@@ -416,20 +416,20 @@ uint j1PathFinding::SimpleAstar(const iPoint & origin, const iPoint & destinatio
 	if (IsWalkable(origin) && IsWalkable(destination))
 	{
 		ret = 1;
-		OpenList open;
+		std::priority_queue<PathNode*, std::vector<PathNode*>, compare > open;
 		PathNode* firstNode = GetPathNode(origin.x, origin.y);
 		firstNode->SetPosition(origin);
 		firstNode->g = 0;
 
 		firstNode->h = origin.DistanceToh(destination);
 
-		open.list.push(firstNode);
+		open.push(firstNode);
 		PathNode* current = nullptr;
-		while (open.list.size() != 0)
+		while (open.size() != 0)
 		{
-			current = open.list.top();
-			open.list.top()->on_close = true;
-			open.list.pop();
+			current = open.top();
+			open.top()->on_close = true;
+			open.pop();
 			if (current->pos == destination)
 			{
 
@@ -470,7 +470,7 @@ uint j1PathFinding::SimpleAstar(const iPoint & origin, const iPoint & destinatio
 					{
 						temp->on_open = true;
 						temp->CalculateFopt(destination);
-						open.list.push(temp);
+						open.push(temp);
 					}
 				}
 
