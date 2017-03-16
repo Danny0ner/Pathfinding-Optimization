@@ -94,7 +94,10 @@ bool j1Scene::PreUpdate()
 	{
 		if (origin_selected == true)
 		{
+
 			lastnormaltime = App->pathfinding->CreatePath(origin, p);
+		
+			
 			origin_selected = false;
 		}
 		else

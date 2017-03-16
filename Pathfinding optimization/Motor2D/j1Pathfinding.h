@@ -100,6 +100,7 @@ struct PathNode
 // ---------------------------------------------------------------------
 struct PathList
 {
+	std::list<PathNode> list;
 	// Looks for a node in this list and returns it's list node or NULL
 	std::list<PathNode>::iterator Find(const iPoint& point);
 	iPoint Findp(const iPoint& point);
@@ -108,7 +109,7 @@ struct PathList
 
 	// -----------
 	// The list itself
-	std::list<PathNode> list;
+
 };
 
 struct PathListOptimized

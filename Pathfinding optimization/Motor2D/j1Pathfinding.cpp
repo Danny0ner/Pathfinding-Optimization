@@ -308,10 +308,10 @@ int PathNode::CalculateF(const iPoint& destination)
 int PathNode::CalculateFopt(const iPoint& destination)
 {
 	if (parent->pos.DistanceManhattan(pos) == 1) {
-		g = parent->g + 1;
+		g = parent->g + 10;
 	}
 	else if (parent->pos.DistanceManhattan(pos) == 2) {
-		g = parent->g + 4;
+		g = parent->g + 14;
 	}
 	else {
 		g = parent->g + 1;
@@ -329,12 +329,15 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 	j1PerfTimer timer;
 	timer.Start();
 	int ret = -1;
+	
 	if (IsWalkable(origin) && IsWalkable(destination))
 	{
 		last_path.clear();
 		ret = 1;
-		PathList open;
 		PathList close;
+		close.list.clear();
+		PathList open;
+		open.list.clear();
 		open.list.push_back(PathNode(0, origin.DistanceManhattan(destination), origin, nullptr));
 		while (open.list.size() != 0)
 		{
@@ -364,13 +367,14 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 			else
 			{
 				PathList neightbords;
+				neightbords.list.clear();
 				close.list.back().FindWalkableAdjacents(&neightbords);
 				for (std::list<PathNode>::iterator item = neightbords.list.begin(); item != neightbords.list.end(); item++) {
-					if (close.Findp(item->pos) == item->pos)
+					if (close.Find(item->pos) == item)
 					{
 						continue;
 					}
-					else if (close.Findp(item->pos) == item->pos)
+					else if (open.Findp(item->pos) == item._Mynode()->_Myval.pos)
 					{
 						PathNode temp;
 						temp = open.Find(item->pos)._Ptr->_Myval;
@@ -406,8 +410,7 @@ bool PathNode::operator!=(const PathNode & node) const
 
 uint j1PathFinding::SimpleAstar(const iPoint & origin, const iPoint & destination)
 {
-	j1PerfTimer timer;
-	timer.Start();
+	uint timer = SDL_GetTicks();
 	int size = width*height;
 	std::fill(node_map, node_map + size, PathNode(-1, -1, iPoint(-1, -1), nullptr));
 
@@ -416,7 +419,7 @@ uint j1PathFinding::SimpleAstar(const iPoint & origin, const iPoint & destinatio
 	if (IsWalkable(origin) && IsWalkable(destination))
 	{
 		ret = 1;
-		std::priority_queue<PathNode*, std::vector<PathNode*>, compare > open;
+		std::priority_queue<PathNode*, std::vector<PathNode*>, compare> open;
 		PathNode* firstNode = GetPathNode(origin.x, origin.y);
 		firstNode->SetPosition(origin);
 		firstNode->g = 0;
@@ -440,8 +443,8 @@ uint j1PathFinding::SimpleAstar(const iPoint & origin, const iPoint & destinatio
 					last_path.push_back(current->pos);
 				}
 				last_path.push_back(current->pos);
-				uint time = timer.ReadMs();
-				return time;
+				
+				return SDL_GetTicks() - timer;
 			}
 			else
 			{
