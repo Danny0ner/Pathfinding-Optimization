@@ -36,8 +36,7 @@ void j1PathFinding::SetMap(uint width, uint height, uchar* data)
 	map = new uchar[width*height];
 	//TODO1
 	//create a node_map
-	//node_map = new PathNode[width*height];
-
+	
 	memcpy(map, data, width*height);
 }
 
@@ -179,7 +178,7 @@ uint PathNode::FindWalkableAdjacents(PathList* list_to_fill) const
 
 	return list_to_fill->list.size();
 }
-//Uncomment this after TODO 4
+
 uint PathNode::FindWalkableAdjacents(std::list<PathNode*>* list_to_fill) const
 {
 	iPoint cell;
@@ -417,7 +416,6 @@ float j1PathFinding::CreatePathOptimized(const iPoint & origin, const iPoint & d
 	int size = width*height;
 	//TODO 2
 	// Fill the node_map with with null PathNodes  using std::fill(firstpoint, lastpoint, Node OutOfBOunds);
-	//::fill(node_map, node_map + size, PathNode(-1, -1, iPoint(-1, -1), nullptr));
 	int ret = -1;
 
 	if (IsWalkable(origin) && IsWalkable(destination))
@@ -425,15 +423,20 @@ float j1PathFinding::CreatePathOptimized(const iPoint & origin, const iPoint & d
 		ret = 1;
 		//TODO 3 
 		//Create a priority_queue open that compares a PathNode* in a vector of PathNodes* using the compare struct
-		//std::priority_queue<PathNode*, std::vector<PathNode*>, compare> open;
+		//delete list open after creating the priority queue
+
 		std::list<PathNode*> open;
-		//TODO 5
-		//Inicialize firstNode getting its node and setting its position, g and h
-	
+
+		//Uncomment this after doing TODO 4
+		/*PathNode* firstNode = GetPathNode(origin.x, origin.y);
+		firstNode->SetPosition(origin);
+		firstNode->g = 0;
+		firstNode->h = origin.DistanceTo(destination);*/
+
 		PathNode* current = nullptr;
 		while (open.size() != 0)
 		{
-			//TODO 6 
+			//TODO 5 
 			//Get the top of the queue as the current node, set it on_close and pop the top node.
 			
 			if (current->pos == destination)
@@ -441,7 +444,7 @@ float j1PathFinding::CreatePathOptimized(const iPoint & origin, const iPoint & d
 
 				std::vector<iPoint>* path = new std::vector<iPoint>;
 				last_path.clear();
-				//TODO 8
+				//TODO 7
 				// make a loop for current, and until its parent is nullptr, make current = ParentNode
 
 				//remember that when parent is null, we're on the first pos, so when the loop finishes we have to add current again
@@ -455,7 +458,7 @@ float j1PathFinding::CreatePathOptimized(const iPoint & origin, const iPoint & d
 				for (std::list<PathNode*>::iterator item = neighbours.begin(); item != neighbours.end(); item++) {
 					PathNode* temp = item._Mynode()->_Myval;
 
-					//TODO 7
+					//TODO 6
 					//change "true" in if an else if for on_open, on_close booleans 
 
 					//remember that in the "if" we check if the node is in the closed list and in the "else if" we check if the node is in the open list
@@ -470,7 +473,7 @@ float j1PathFinding::CreatePathOptimized(const iPoint & origin, const iPoint & d
 						temp->CalculateFopt(destination);
 						if (last_g_value < temp->g)
 						{
-							//Uncomment this and complete it getting its parent with the function GetPathNode from current's parent pos while doing TODO 7
+							//Uncomment this and complete it getting its parent with the function GetPathNode from current's parent pos while doing TODO 6
 							//temp->parent = 
 						}
 						else {

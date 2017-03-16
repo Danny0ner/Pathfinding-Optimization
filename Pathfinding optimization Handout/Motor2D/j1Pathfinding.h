@@ -58,8 +58,8 @@ private:
 	uint height;
 	// all map walkability values [0..255]
 	uchar* map;
-	//TODO1 create an array node map
-	//PathNode* node_map;
+	//TODO1 create a node pointer for node map
+
 	// we store the created path here
 	std::vector<iPoint> last_path;
 };
@@ -128,11 +128,10 @@ struct PathListOptimized
 	// The list itself
 	std::list<PathNode*> list;
 };
-//struct compare
-//{
-	//bool operator()(const PathNode* l, const PathNode* r)
-	//{
-		//return l->Score() >= r->Score();
-	//}
-//};
+//TODO 3 create a bool operator inside the struct that recieve 2 const pathnodes* and return true 
+//if the first one escore is bigger than the second one
+struct compare
+{
+
+};
 #endif // __j1PATHFINDING_H__
