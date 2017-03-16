@@ -169,7 +169,7 @@ You can download the project in github (link at the top), and try yourself!!
 
 # References:
 
-[https://www.gamedev.net/resources/_/technical/artificial-intelligence/jump-point-search-fast-a-pathfinding-for-uniform-cost-grids-r4220](https://www.gamedev.net/resources/_/technical/artificial-intelligence/jump-point-search-fast-a-pathfinding-for-uniform-cost-grids-r4220)
+[https://www.gamedev.net/technical/artificial-intelligence/jump-point-search-fast-a-pathfinding-for-uniform-cost-grids-r4220](https://www.gamedev.net/resources/_/technical/artificial-intelligence/jump-point-search-fast-a-pathfinding-for-uniform-cost-grids-r4220)
 
 [http://www.gameaipro.com/GameAIPro/GameAIPro_Chapter17_Pathfinding_Architecture_Optimizations.pdf](http://www.gameaipro.com/GameAIPro/GameAIPro_Chapter17_Pathfinding_Architecture_Optimizations.pdf)
 
