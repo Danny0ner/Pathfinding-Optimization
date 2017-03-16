@@ -7,6 +7,7 @@
 #include "j1PerfTimer.h"
 #include <vector>
 #include <queue>
+#include <list>
 
 #define DEFAULT_PATH_LENGTH 0
 #define INVALID_WALK_CODE 255
@@ -33,9 +34,9 @@ public:
 	void SetMap(uint width, uint height, uchar* data);
 
 	// Main function to request a path from A to B
-	int CreatePath(const iPoint& origin, const iPoint& destination);
+	uint32_t CreatePath(const iPoint& origin, const iPoint& destination);
 
-	uint SimpleAstar(const iPoint & origin, const iPoint & destination);
+	uint CreatePathOptimized(const iPoint & origin, const iPoint & destination);
 	// To request all tiles involved in the last generated path
 	const std::vector<iPoint>* GetLastPath() const;
 
@@ -56,6 +57,7 @@ private:
 	uint height;
 	// all map walkability values [0..255]
 	uchar* map;
+	//TODO1 create a node map
 	PathNode* node_map;
 	// we store the created path here
 	std::vector<iPoint> last_path;
@@ -77,7 +79,7 @@ struct PathNode
 	// Fills a list (PathList) of all valid adjacent pathnodes
 	uint FindWalkableAdjacents(PathList* list_to_fill) const;
 
-	uint FindWalkableAdjacents(PathListOptimized* list_to_fill) const;
+	uint FindWalkableAdjacents(std::list<PathNode*>* list_to_fill) const;
 	// Calculates this tile score
 	float Score() const;
 	// Calculate the F for a specific destination tile
@@ -98,6 +100,7 @@ struct PathNode
 // ---------------------------------------------------------------------
 // Helper struct to include a list of path nodes
 // ---------------------------------------------------------------------
+
 struct PathList
 {
 	std::list<PathNode> list;
@@ -131,20 +134,4 @@ struct compare
 		return l->Score() >= r->Score();
 	}
 };
-struct OpenList
-{
-public:
-	//Methods ---------------
-	// Looks for a node in this list and returns it's list node or NULL
-	//std::list<PathNode>::iterator Find(const iPoint& point);
-	// Returns the path node with lowest score in this list or NULL if empty
-	//PathNode* GetNodeLowestScore() const;
-
-	// PathList data --------
-	
-};
-
-
-
-
 #endif // __j1PATHFINDING_H__

@@ -42,35 +42,6 @@ bool j1Scene::Start()
 	}
 
 	debug_tex = App->tex->Load("maps/path2.png");
-
-	/*TEST UI 
-	//Definition UIElements
-	uint width = 0;
-	uint height = 0;
-	App->win->GetWindowSize(width, height);
-
-
-	banner = (UIImage*)App->uimanager->addUIComponent(UIComponent_TYPE::UIIMAGE);
-	banner->Set({ (int)width / 2, (int)height / 4, 328, 103 }, { 485, 829, 328, 103 });
-
-	text = (UILabel*)App->uimanager->addUIComponent(UIComponent_TYPE::UILABEL);
-	text->Set(width / 2, height / 4 - 120, "Hello World");
-
-	check_test = (UICheckbutton*)App->uimanager->addUIComponent(UIComponent_TYPE::UICHECKBUTTON);
-	check_test->Set({ 100, 100, 328, 103 }, { 485, 829, 328, 103 }, { 100, 100, 328, 103 });
-	check_test->title->Set(150, 75, "Test Chech Button");
-
-	select_test = (UISelectOption*)App->uimanager->addUIComponent(UIComponent_TYPE::UISELECTOPTION);
-	select_test->Set({ 100,500,100,50 }, { 485, 829, 100, 50 });
-	select_test->title->Set(100, 475, "Select Your Destiny");
-	select_test->AddOption("OMG");
-	select_test->AddOption("YOU'RE FAGGOT");
-	select_test->AddOption("LET ME SUICIDE");
-	select_test->AddOption("FUCK OFF");
-	*/
-
-
-
 	return true;
 }
 
@@ -110,7 +81,7 @@ bool j1Scene::PreUpdate()
 	{
 		if (origin_selected == true)
 		{
-			lastoptimizedtime = App->pathfinding->SimpleAstar(origin, p);
+			lastoptimizedtime = App->pathfinding->CreatePathOptimized(origin, p);
 			origin_selected = false;
 		}
 		else
@@ -125,36 +96,6 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-
-	// UIManager ---
-	/* TEST
-	if (text->stat == UIComponent_Stat::SELECTED)
-	{
-		if (right_click == true)
-			text->ChangeText("Hello World - right click");
-		else if (left_click == true)
-			text->ChangeText("Hello World - left click");
-		else
-			text->ChangeText("It's hover");
-	}
-	else if (text->stat == UIComponent_Stat::UNSELECTED)
-	{
-		text->ChangeText("Hello World");
-		right_click = false;
-		left_click = false;
-	}
-	else if (text->stat == UIComponent_Stat::CLICKR_DOWN)
-	{
-		right_click = true;
-		left_click = false;
-	}
-	else if (text->stat == UIComponent_Stat::CLICKL_DOWN)
-	{
-		left_click = true;
-		right_click = false;
-	}
-	/**/
-	// -------
 	if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 		App->LoadGame("save_game.xml");
 

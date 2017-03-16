@@ -129,7 +129,7 @@ public:
 		return (fx*fx) + (fy*fy);
 	}
 
-	TYPE DistanceManhattan(const p2Point& v) const
+	TYPE DistanceHeuristic(const p2Point& v) const
 	{
 		int dx = abs(v.x - x);
 		int dy = abs(v.y - y);

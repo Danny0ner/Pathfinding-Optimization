@@ -34,7 +34,10 @@ void j1PathFinding::SetMap(uint width, uint height, uchar* data)
 
 	RELEASE_ARRAY(map);
 	map = new uchar[width*height];
+	//TODO1
+	//create a node_map
 	node_map = new PathNode[width*height];
+
 	memcpy(map, data, width*height);
 }
 
@@ -176,10 +179,10 @@ uint PathNode::FindWalkableAdjacents(PathList* list_to_fill) const
 
 	return list_to_fill->list.size();
 }
-uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
+uint PathNode::FindWalkableAdjacents(std::list<PathNode*>* list_to_fill) const
 {
 	iPoint cell;
-	uint before = list_to_fill->list.size();
+	uint before = list_to_fill->size();
 	bool northClose = false, southClose = false, eastClose = false, westClose = false;
 	// south
 	cell.create(pos.x, pos.y + 1);
@@ -190,7 +193,7 @@ uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
 			node->parent = this;
 			node->pos = cell;
 		}
-		list_to_fill->list.push_back(node);
+		list_to_fill->push_back(node);
 	}
 	else
 	{
@@ -205,7 +208,7 @@ uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
 			node->parent = this;
 			node->pos = cell;
 		}
-		list_to_fill->list.push_back(node);
+		list_to_fill->push_back(node);
 	}
 	else
 	{
@@ -220,7 +223,7 @@ uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
 			node->parent = this;
 			node->pos = cell;
 		}
-		list_to_fill->list.push_back(node);
+		list_to_fill->push_back(node);
 	}
 	// west
 	cell.create(pos.x - 1, pos.y);
@@ -231,7 +234,7 @@ uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
 			node->parent = this;
 			node->pos = cell;
 		}
-		list_to_fill->list.push_back(node);
+		list_to_fill->push_back(node);
 	}
 	// south-east
 	cell.create(pos.x + 1, pos.y + 1);
@@ -242,7 +245,7 @@ uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
 			node->parent = this;
 			node->pos = cell;
 		}
-		list_to_fill->list.push_back(node);
+		list_to_fill->push_back(node);
 	}
 	// south-west
 	cell.create(pos.x - 1, pos.y + 1);
@@ -253,7 +256,7 @@ uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
 			node->parent = this;
 			node->pos = cell;
 		}
-		list_to_fill->list.push_back(node);
+		list_to_fill->push_back(node);
 	}
 	// north-east
 	cell.create(pos.x + 1, pos.y - 1);
@@ -264,7 +267,7 @@ uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
 			node->parent = this;
 			node->pos = cell;
 		}
-		list_to_fill->list.push_back(node);
+		list_to_fill->push_back(node);
 	}
 	// north-west
 	cell.create(pos.x - 1, pos.y - 1);
@@ -275,9 +278,9 @@ uint PathNode::FindWalkableAdjacents(PathListOptimized* list_to_fill) const
 			node->parent = this;
 			node->pos = cell;
 		}
-		list_to_fill->list.push_back(node);
+		list_to_fill->push_back(node);
 	}
-	return list_to_fill->list.size();
+	return list_to_fill->size();
 }
 
 // PathNode -------------------------------------------------------------------------
@@ -293,10 +296,10 @@ float PathNode::Score() const
 // ----------------------------------------------------------------------------------
 int PathNode::CalculateF(const iPoint& destination)
 {
-	if (parent->pos.DistanceManhattan(pos) == 1){
+	if (parent->pos.DistanceHeuristic(pos) == 1){
 		g = parent->g + 10;
 	}
-	else if (parent->pos.DistanceManhattan(pos) == 2) {
+	else if (parent->pos.DistanceHeuristic(pos) == 2) {
 		g = parent->g + 14;
 	}
 	else {
@@ -307,16 +310,16 @@ int PathNode::CalculateF(const iPoint& destination)
 }
 int PathNode::CalculateFopt(const iPoint& destination)
 {
-	if (parent->pos.DistanceManhattan(pos) == 1) {
+	if (parent->pos.DistanceHeuristic(pos) == 1) {
 		g = parent->g + 10;
 	}
-	else if (parent->pos.DistanceManhattan(pos) == 2) {
-		g = parent->g + 14;
+	else if (parent->pos.DistanceHeuristic(pos) == 2) {
+		g = parent->g + 16;
 	}
 	else {
-		g = parent->g + 1;
+		g = parent->g + 10;
 	}
-	h = pos.DistanceToh(destination);
+	h = pos.DistanceTo(destination);
 	return  g + h;
 }
 
@@ -324,7 +327,7 @@ int PathNode::CalculateFopt(const iPoint& destination)
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
 
-int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+uint32_t j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
 	j1PerfTimer timer;
 	timer.Start();
@@ -338,7 +341,7 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 		close.list.clear();
 		PathList open;
 		open.list.clear();
-		open.list.push_back(PathNode(0, origin.DistanceManhattan(destination), origin, nullptr));
+		open.list.push_back(PathNode(0, origin.DistanceHeuristic(destination), origin, nullptr));
 		while (open.list.size() != 0)
 		{
 
@@ -360,7 +363,8 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 				std::reverse(last_path.begin(), last_path.end());
 				open.list.clear();
 				close.list.clear();
-				uint time = timer.ReadMs();
+				uint32_t time = timer.ReadMs();
+				LOG("time %d", time);
 				return time;
 				
 			}
@@ -408,28 +412,34 @@ bool PathNode::operator!=(const PathNode & node) const
 	return !operator==(node);
 }
 
-uint j1PathFinding::SimpleAstar(const iPoint & origin, const iPoint & destination)
+uint j1PathFinding::CreatePathOptimized(const iPoint & origin, const iPoint & destination)
 {
 	uint timer = SDL_GetTicks();
 	int size = width*height;
+	//TODO 2
+	// Fill the node_map with with null PathNodes 
 	std::fill(node_map, node_map + size, PathNode(-1, -1, iPoint(-1, -1), nullptr));
-
 	int ret = -1;
 
 	if (IsWalkable(origin) && IsWalkable(destination))
 	{
 		ret = 1;
+		//TODO 3 
+		//Create a priority_queue open that compares a PathNode* in a vector of PathNodes* using the compare struct
 		std::priority_queue<PathNode*, std::vector<PathNode*>, compare> open;
+		//TODO 5
+		//Inicialize firstNode getting its node and setting its position, g and h
 		PathNode* firstNode = GetPathNode(origin.x, origin.y);
 		firstNode->SetPosition(origin);
 		firstNode->g = 0;
-
-		firstNode->h = origin.DistanceToh(destination);
+		firstNode->h = origin.DistanceTo(destination);
 
 		open.push(firstNode);
 		PathNode* current = nullptr;
 		while (open.size() != 0)
 		{
+			//TODO 6 
+			//Get the top of the queue as the current node, set it on_close and pop the top node.
 			current = open.top();
 			open.top()->on_close = true;
 			open.pop();
@@ -438,21 +448,23 @@ uint j1PathFinding::SimpleAstar(const iPoint & origin, const iPoint & destinatio
 
 				std::vector<iPoint>* path = new std::vector<iPoint>;
 				last_path.clear();
+				//TODO 8
+				// make a look for current, and until its parent is nullptr, make current = ParentNode
 				for (; current->parent != nullptr; current = GetPathNode(current->parent->pos.x, current->parent->pos.y))
 				{
 					last_path.push_back(current->pos);
 				}
 				last_path.push_back(current->pos);
-				
 				return SDL_GetTicks() - timer;
 			}
 			else
 			{
-				PathListOptimized neightbords;
-				current->FindWalkableAdjacents(&neightbords);
-				for (std::list<PathNode*>::iterator item = neightbords.list.begin(); item != neightbords.list.end(); item++) {
+				std::list<PathNode*> neighbours;
+				current->FindWalkableAdjacents(&neighbours);
+				for (std::list<PathNode*>::iterator item = neighbours.begin(); item != neighbours.end(); item++) {
 					PathNode* temp = item._Mynode()->_Myval;
-
+					//TODO 7
+					//change if an else if for on_open, on_close booleans 
 					if (temp->on_close == true)
 					{
 						continue;
@@ -477,13 +489,15 @@ uint j1PathFinding::SimpleAstar(const iPoint & origin, const iPoint & destinatio
 					}
 				}
 
-				neightbords.list.clear();
+				neighbours.clear();
 			}
 		}
 	}
 	return -1;
 }
 
+//TODO 4
+// Create a function that returns a pointer of a PathNode by entering its position.
 PathNode* j1PathFinding::GetPathNode(int x, int y)
 {
 	return &node_map[(y*width) + x];

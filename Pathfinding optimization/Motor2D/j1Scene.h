@@ -49,8 +49,8 @@ private:
 	bool left_click = false;
 	/**/
 	bool optimizedpathfinding = false;
-	uint lastoptimizedtime = 0;
-	uint lastnormaltime = 0;
+	uint32_t lastoptimizedtime = 0;
+	uint32_t lastnormaltime = 0;
 	int x_select = 0;
 	int y_select = 0;
 	int w = 0;
