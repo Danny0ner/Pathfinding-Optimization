@@ -13,7 +13,9 @@ j1PathFinding::j1PathFinding() : j1Module(), map(NULL), last_path(DEFAULT_PATH_L
 // Destructor
 j1PathFinding::~j1PathFinding()
 {
+
 	RELEASE_ARRAY(map);
+	//TODO 1 free node_map ;)
 }
 
 // Called before quitting
@@ -22,7 +24,10 @@ bool j1PathFinding::CleanUp()
 	LOG("Freeing pathfinding library");
 
 	last_path.clear();
+
 	RELEASE_ARRAY(map);
+
+	//TODO 1 free node_map ;)
 	return true;
 }
 
@@ -311,7 +316,7 @@ int PathNode::CalculateF(const iPoint& destination)
 int PathNode::CalculateFopt(const iPoint& destination)
 {
 	if (parent->pos.DistanceHeuristic(pos) == 1) {
-		g = parent->g + 10;
+		g = parent->g + 11;
 	}
 	else if (parent->pos.DistanceHeuristic(pos) == 2) {
 		g = parent->g + 16;
@@ -405,10 +410,6 @@ bool PathNode::operator==(const PathNode & node) const
 	return pos == node.pos;
 }
 
-bool PathNode::operator!=(const PathNode & node) const
-{
-	return !operator==(node);
-}
 
 float j1PathFinding::CreatePathOptimized(const iPoint & origin, const iPoint & destination)
 {
@@ -431,7 +432,10 @@ float j1PathFinding::CreatePathOptimized(const iPoint & origin, const iPoint & d
 		/*PathNode* firstNode = GetPathNode(origin.x, origin.y);
 		firstNode->SetPosition(origin);
 		firstNode->g = 0;
-		firstNode->h = origin.DistanceTo(destination);*/
+		firstNode->h = origin.DistanceTo(destination);
+		*/
+		
+		//Add firstnode to the open priority queue
 
 		PathNode* current = nullptr;
 		while (open.size() != 0)

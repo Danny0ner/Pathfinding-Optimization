@@ -66,7 +66,6 @@ private:
 
 // forward declaration
 struct PathList;
-struct PathListOptimized;
 // ---------------------------------------------------------------------
 // Pathnode: Helper struct to represent a node in the path creation
 // ---------------------------------------------------------------------
@@ -92,7 +91,6 @@ struct PathNode
 	int h;
 	iPoint pos;
 	bool operator ==(const PathNode& node)const;
-	bool operator !=(const PathNode& node)const;
 	bool on_close = false;
 	bool on_open = false;
 	const PathNode* parent; // needed to reconstruct the path in the end
@@ -116,18 +114,6 @@ struct PathList
 
 };
 
-struct PathListOptimized
-{
-	// Looks for a node in this list and returns it's list node or NULL
-	std::list<PathNode>::iterator Find(const iPoint& point);
-	iPoint Findp(const iPoint& point);
-	// Returns the Pathnode with lowest score in this list or NULL if empty
-	PathNode* GetNodeLowestScore() const;
-
-	// -----------
-	// The list itself
-	std::list<PathNode*> list;
-};
 //TODO 3 create a bool operator inside the struct that recieve 2 const pathnodes* and return true 
 //if the first one escore is bigger than the second one
 struct compare
