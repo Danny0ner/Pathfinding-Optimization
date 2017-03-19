@@ -15,13 +15,13 @@ This is what we do when we implement the A* algorithm:
 
 1. Find node closest to your position and declare it start node and put it on the open list. 
 2. While there are nodes in the open list:
-  3. Pick the node from the open list having the smallest F score. Put it on 
+3. Pick the node from the open list having the smallest F score. Put it on 
       the closed list (you don't want to consider it again).
-   4. For each neighbour (adjacent cell) which isn't in the closed list:
-    5. Set its parent to current node.
-    6. Calculate G score (distance from starting node to this neighbour) and 
+4. For each neighbour (adjacent cell) which isn't in the closed list.
+5. Set its parent to current node.
+6. Calculate G score (distance from starting node to this neighbour) and 
          add it to the open list
-    7. Calculate F score by adding heuristics to the G value.
+7. Calculate F score by adding heuristics to the G value.
 
 # Basic Pathfinding Optimizations
 We have so many ways to optimize pathfinding making little changes to it. They’re changes that will make it faster, but not as fast as concept optimizations, which will be explained later.
